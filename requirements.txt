@@ -6,3 +6,4 @@ seaborn
 torch
 torchvision
 scikit-learn
+tensorboard

@@ -1,0 +1,9 @@
+resouces:
+  path: resources
+
+dataset:
+  path: resources/dataset
+
+model:
+  draws_path: model/draws
+  checkpoint_path: model/checkpoints

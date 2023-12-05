@@ -9,33 +9,31 @@ from tqdm import tqdm
 
 from model.train.base.hyperparameters import Hyperparameters
 from model.train.base.trainer import Trainer
-from model.train.hyperparams.ann_hyperparams import ANN_Hyperparameters
+from model.train.hyperparams.stroke_ann_hyperparams import Stroke_Hyperparameters
 from utils.tensorboard_utils import TensorboardUtils
-# from ray import tune
 
 
-class ANN_trainer(Trainer):
+class StrokeTrainer(Trainer):
 
     def __init__(self, model: nn.Module, name: str = None, criterion=None, optimizer: torch.optim.Optimizer = None,
                  writer: SummaryWriter = None, hyperparameters: Hyperparameters = None) -> None:
         self._name = name
         if hyperparameters is None:
-            hyperparameters = ANN_Hyperparameters()
+            hyperparameters = Stroke_Hyperparameters()
 
         super().__init__(model, self.get_name(), criterion, optimizer, writer, hyperparameters)
 
     def get_optimizer(self) -> torch.optim.Optimizer:
         if self._optim is None:
-            self._optim = torch.optim.Adam(self.model.parameters(), lr=self.hyperparameters['LEARNING_RATE'])
+            self._optim = torch.optim.SGD(self.model.parameters(), lr=self.hyperparameters['LEARNING_RATE'], momentum=0.9)
         return self._optim
 
     def get_criterion(self):
         if self._criterion is None:
-            self._criterion = nn.MSELoss()
+            self._criterion = nn.CrossEntropyLoss()
         return self._criterion
 
-    def train_loader(self, train_loader: DataLoader, test_loader: DataLoader, use_ray_tune: bool = False) \
-            -> Tuple[np.array, np.array]:
+    def train_loader(self, train_loader: DataLoader, test_loader: DataLoader) -> Tuple[np.array, np.array]:
 
         train_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
         test_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
@@ -65,7 +63,7 @@ class ANN_trainer(Trainer):
                     self.writer.add_graph(self.model, input_to_model=data[0], verbose=False)
 
             train_losses[epoch] = current_loss
-            self.writer.add_scalar("ANN - Loss/train", current_loss, epoch)
+            self.writer.add_scalar("Stroke ANN - Loss/train", current_loss, epoch)
 
             # Evaluate accuracy at end of each epoch
             self.model.eval()
@@ -81,21 +79,7 @@ class ANN_trainer(Trainer):
                 val_steps += 1
 
             test_losses[epoch] = val_loss
-            self.writer.add_scalar("ANN - Loss/test", val_loss, epoch)
-            # Communication with Ray Tune:
-            ''' if use_ray_tune:
-                with tune.checkpoint_dir(epoch) as checkpoint_dir:
-                    path = os.path.join(checkpoint_dir, "checkpoint")
-                    torch.save((self.model.state_dict(), optimizer.state_dict()), path)
-                tune.report(loss=(val_loss / val_steps)) # here you can insert accuracy too '''
-
-            # Draw plot predicted vs actual (tensorboard)
-            if not use_ray_tune:
-                if (epoch + 1) % 10 == 0:
-                    y_pred = torch.from_numpy(self.predict(test_loader.dataset.X)).reshape(-1, 1)
-                    self.writer.add_figure('ANN - Predicted vs Actual',
-                                           TensorboardUtils.draw_prediction_tensorboard(y_pred, test_loader.dataset.y, epoch),
-                                           global_step=epoch+1)
+            self.writer.add_scalar("Stroke ANN - Loss/test", val_loss, epoch)
 
         # Save the model at the end of the training (for future inference)
         self._save_model()
@@ -118,4 +102,4 @@ class ANN_trainer(Trainer):
         return np.array(test_predictions)
 
     def get_name(self) -> str:
-        return 'ann_' if self._name is None else self._name
+        return 'stroke_ann_' if self._name is None else self._name

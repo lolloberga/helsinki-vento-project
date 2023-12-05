@@ -4,18 +4,15 @@ from model.train.base.hyperparameters import Hyperparameters
 ANN_defaults_hyperparams = {
     'TRAIN_SIZE': 0.7,
     'RANDOM_STATE': 42,
-    'INPUT_SIZE': 60,
-    'HIDDEN_SIZE': 128,
-    'HIDDEN_SIZE_2': 90,
-    'HIDDEN_SIZE_3': 30,
-    'OUTPUT_SIZE': 1,
-    'LEARNING_RATE': 0.0001,
+    'HIDDEN_SIZE': 30,
+    'HIDDEN_SIZE_2': 10,
+    'LEARNING_RATE': 0.001,
     'NUM_EPOCHS': 20,
-    'BATCH_SIZE': 2
+    'BATCH_SIZE': 50
 }
 
 
-class ANN_Hyperparameters(Hyperparameters):
+class Stroke_Hyperparameters(Hyperparameters):
 
     def __init__(self, hyperparams: dict = None, append_to_other: bool = True):
         if hyperparams is None:

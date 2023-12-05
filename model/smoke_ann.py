@@ -1,4 +1,5 @@
 import torch.nn as nn
+from torch import sigmoid
 
 
 class SmokeNeuralNetwork(nn.Module):
@@ -9,9 +10,9 @@ class SmokeNeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(hidden_size, hidden_size_2),
             nn.ReLU(),
-            nn.Linear(hidden_size_2, output_size),
+            nn.Linear(hidden_size_2, output_size)
         )
 
     def forward(self, x):
-        out = self.net(x)
+        out = sigmoid(self.net(x))
         return out

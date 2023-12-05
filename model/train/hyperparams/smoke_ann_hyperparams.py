@@ -7,7 +7,7 @@ ANN_defaults_hyperparams = {
     'HIDDEN_SIZE': 30,
     'HIDDEN_SIZE_2': 10,
     'LEARNING_RATE': 0.001,
-    'NUM_EPOCHS': 20,
+    'NUM_EPOCHS': 100,
     'BATCH_SIZE': 50
 }
 

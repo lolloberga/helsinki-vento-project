@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from model.train.base.hyperparameters import Hyperparameters
 from model.train.base.trainer import Trainer
-from model.train.hyperparams.stroke_ann_hyperparams import Stroke_Hyperparameters
+from model.train.hyperparams.smoke_ann_hyperparams import Smoke_Hyperparameters
 from utils.tensorboard_utils import TensorboardUtils
 
 
@@ -19,7 +19,7 @@ class SmokeTrainer(Trainer):
                  writer: SummaryWriter = None, hyperparameters: Hyperparameters = None) -> None:
         self._name = name
         if hyperparameters is None:
-            hyperparameters = Stroke_Hyperparameters()
+            hyperparameters = Smoke_Hyperparameters()
 
         super().__init__(model, self.get_name(), criterion, optimizer, writer, hyperparameters)
 
@@ -30,7 +30,7 @@ class SmokeTrainer(Trainer):
 
     def get_criterion(self):
         if self._criterion is None:
-            self._criterion = nn.CrossEntropyLoss()
+            self._criterion = nn.BCELoss()
         return self._criterion
 
     def train_loader(self, train_loader: DataLoader, test_loader: DataLoader) -> Tuple[np.array, np.array]:
@@ -39,8 +39,10 @@ class SmokeTrainer(Trainer):
         test_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
 
         for epoch in tqdm(range(self.hyperparameters['NUM_EPOCHS']), desc='Train the model'):
+
             self.model.train()
             current_loss = 0.0
+            tot_correct = 0
 
             optimizer = self.get_optimizer()
             criterion = self.get_criterion()
@@ -58,17 +60,32 @@ class SmokeTrainer(Trainer):
                 loss.backward()
                 optimizer.step()
                 current_loss += loss.item()
+                # Training Accuracy
+                for out, tar in zip(outputs, targets):
+                    treshold = 0.5
+                    if out > treshold:
+                        out = 1
+                    else: out = 0
+                    tot_correct += (out == tar).float().item()
                 # Write the network graph at epoch 0, batch 0
                 if epoch == 0 and i == 0:
                     self.writer.add_graph(self.model, input_to_model=data[0], verbose=False)
 
+            # print('total correct:',tot_correct)
+            # print('total data:   ',len(train_loader.dataset))
+            # print('accuracy:     ',100*tot_correct/len(train_loader.dataset))
+
             train_losses[epoch] = current_loss
+            accuracy = 100*tot_correct/len(train_loader.dataset)
+
             self.writer.add_scalar("Stroke ANN - Loss/train", current_loss, epoch)
+            self.writer.add_scalar("Stroke ANN - Accuracy", accuracy, epoch)
 
             # Evaluate accuracy at end of each epoch
             self.model.eval()
             val_loss = 0.0
             val_steps = 0
+
             for i, data in enumerate(test_loader, 0):
                 inputs, targets = data
                 inputs, targets = inputs.float().to(self.device), targets.float().to(self.device)

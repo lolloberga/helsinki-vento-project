@@ -7,8 +7,13 @@ By understanding physiological phenotypes of aging through artificial intelligen
 Here we train multiple Neural Networks (NNs) to learn how different vital parameters of our body may have a future impact in determining certain neurodegenerative diseases that can lead to non-self-sufficiency. This is done by analysing many datasets coming from different health data provider.
 
 <p align="center">
-  <img width="450" height="400" src="https://live.staticflickr.com/65535/53379027881_1f75744f78_n.jpg">
+  <img width="450" height="400" src="https://live.staticflickr.com/65535/53379027881_1f75744f78_n.jpg"><br>
+  Fig. 1: Overview of study design <a href="#1">[1]</a>
 </p>
+
+Of all the models needed for the implementation of this project, we have begun to develop 2:
+- <b>Stroke detection</b>: a feed forward neural network that predicts the possibility of having a stroke given some vital parameters retrievable from a blood test
+- <b>Smoke detection</b>: a neural network that can identify whether you are a smoker from data from a blood test
 
 -------------------------
 
@@ -42,6 +47,12 @@ These are the performance of training in terms of accuracy and loss function.
 |:---------------------------------------------------------------------:|:---------------------------------------------------------------------:|
 | ![](https://live.staticflickr.com/65535/53379444215_4d2ea5f5b3_c.jpg) | ![](https://live.staticflickr.com/65535/53378999721_b0878303f3_c.jpg) |
 </p>
+
+Tensorboard:
+<p align="center">
+  <img width="600" height="400" src="https://live.staticflickr.com/65535/53379383674_8bbcdd3521_c.jpg">
+</p>
+
 
 ------------------
 

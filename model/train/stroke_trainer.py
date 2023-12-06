@@ -81,6 +81,7 @@ class StrokeTrainer(Trainer):
             self.model.eval()
             val_loss = 0.0
             val_steps = 0
+            tot_correct = 0
             for i, data in enumerate(test_loader, 0):
                 inputs, targets = data
                 inputs, targets = inputs.float().to(self.device), targets.float().to(self.device)
@@ -89,21 +90,24 @@ class StrokeTrainer(Trainer):
                 test_loss = criterion(y_pred, targets)
                 val_loss += test_loss.item()
                 val_steps += 1
-
-                acc = (y_pred.round() == targets).float().mean()
-                acc = float(acc)
-                if acc > best_acc:
-                    best_acc = acc
+                # Training Accuracy
+                for out, tar in zip(y_pred, targets):
+                    if out > THRESHOLD:
+                        out = 1
+                    else:
+                        out = 0
+                    tot_correct += (out == tar).float().item()
 
             test_losses[epoch] = val_loss
+            accuracy = 100 * tot_correct / len(test_loader.dataset)
             self.writer.add_scalar("Stroke ANN - Loss/test", val_loss, epoch)
-            self.writer.add_scalar("Stroke ANN - Accuracy/test", acc, epoch)
+            self.writer.add_scalar("Stroke ANN - Accuracy/test", accuracy, epoch)
 
         # Save the model at the end of the training (for future inference)
         self._save_model()
         self.writer.flush()
         self.writer.close()
-        return train_losses, test_losses, best_acc
+        return train_losses, test_losses
 
     def train(self, X_train: torch.Tensor, y_train: torch.Tensor, X_test: torch.Tensor = None,
               y_test: torch.Tensor = None) -> Tuple[np.array, np.array]:

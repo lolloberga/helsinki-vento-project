@@ -40,14 +40,14 @@ class SmokeTrainer(Trainer):
         train_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
         test_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
 
+        optimizer = self.get_optimizer()
+        criterion = self.get_criterion()
+
         for epoch in tqdm(range(self.hyperparameters['NUM_EPOCHS']), desc='Train the model'):
 
             self.model.train()
             current_loss = 0.0
             tot_correct = 0
-
-            optimizer = self.get_optimizer()
-            criterion = self.get_criterion()
 
             for i, data in enumerate(train_loader, 0):
                 inputs, targets = data
@@ -76,17 +76,16 @@ class SmokeTrainer(Trainer):
             # print('total correct:',tot_correct)
             # print('total data:   ',len(train_loader.dataset))
             # print('accuracy:     ',100*tot_correct/len(train_loader.dataset))
-
             train_losses[epoch] = current_loss
             accuracy = 100 * tot_correct / len(train_loader.dataset)
-
             self.writer.add_scalar("Stroke ANN - Loss/train", current_loss, epoch)
-            self.writer.add_scalar("Stroke ANN - Accuracy", accuracy, epoch)
+            self.writer.add_scalar("Stroke ANN - Accuracy/train", accuracy, epoch)
 
             # Evaluate accuracy at end of each epoch
             self.model.eval()
             val_loss = 0.0
             val_steps = 0
+            tot_correct = 0
 
             for i, data in enumerate(test_loader, 0):
                 inputs, targets = data
@@ -96,9 +95,18 @@ class SmokeTrainer(Trainer):
                 test_loss = criterion(y_pred, targets)
                 val_loss += test_loss.item()
                 val_steps += 1
+                # Training Accuracy
+                for out, tar in zip(y_pred, targets):
+                    if out > THRESHOLD:
+                        out = 1
+                    else:
+                        out = 0
+                    tot_correct += (out == tar).float().item()
 
             test_losses[epoch] = val_loss
+            accuracy = 100 * tot_correct / len(test_loader.dataset)
             self.writer.add_scalar("Stroke ANN - Loss/test", val_loss, epoch)
+            self.writer.add_scalar("Stroke ANN - Accuracy/test", accuracy, epoch)
 
         # Save the model at the end of the training (for future inference)
         self._save_model()

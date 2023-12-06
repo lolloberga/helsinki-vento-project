@@ -13,6 +13,7 @@ from model.train.smoke_trainer import SmokeTrainer
 
 RANDOM_STATE = 42
 
+
 def build_dataset(cfg: ConfigParser, hyperparams: dict, batch_loader_size: int = 50) -> tuple:
     df = pd.read_csv(os.path.join(cfg.consts['DATASET_PATH'], 'smoking_train_dataset.csv'))
     # One-Hot Enc
@@ -53,7 +54,8 @@ def main():
     # Prepare dataset
     train_loader, test_loader = build_dataset(cfg, hyperparams, batch_loader_size=hyperparams['BATCH_SIZE'])
     # Instantiate the model
-    model = SmokeNeuralNetwork(train_loader.dataset.X.shape[1], 1, hyperparams['HIDDEN_SIZE'], hyperparams['HIDDEN_SIZE_2'])
+    model = SmokeNeuralNetwork(train_loader.dataset.X.shape[1], 1, hyperparams['HIDDEN_SIZE'],
+                               hyperparams['HIDDEN_SIZE_2'])
     trainer = SmokeTrainer(model, name='Smoke-ANN')
     train_losses, test_losses = trainer.train_loader(train_loader, test_loader)
     # Plot the train loss and test loss per iteration

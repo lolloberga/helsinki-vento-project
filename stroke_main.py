@@ -56,11 +56,10 @@ def main():
     # Instantiate the model
     model = StrokeNeuralNetwork(train_loader.dataset.X.shape[1], 1, hyperparams['HIDDEN_SIZE'], hyperparams['HIDDEN_SIZE_2'])
     trainer = StrokeTrainer(model, name='Stroke-ANN')
-    train_losses, test_losses, best_acc = trainer.train_loader(train_loader, test_loader)
-    print("Accuracy: %.2f" % best_acc)
+    train_losses, test_losses = trainer.train_loader(train_loader, test_loader)
     # Plot the train loss and test loss per iteration
     fig = trainer.draw_train_test_loss(train_losses, test_losses)
-    # trainer.save_image('Stroke ANN - Train and test loss', fig)
+    trainer.save_image('Stroke ANN - Train and test loss', fig)
 
 
 if __name__ == "__main__":

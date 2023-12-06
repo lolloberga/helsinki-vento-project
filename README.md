@@ -72,60 +72,33 @@ We compute the Mean Square Error (MSE) for both the below approaches.
 
 
 ## Directory Structure
+    .
+    ├── config
+    ├── dataset
+    ├── model
+    │   ├── loss_functions
+    │   ├── train
+    │   │   ├── base
+    │   │   ├── hyperparams
+    ├── notebook
+    ├── resources
+    ├── notebook
+    ├── runs
+    ├── utils
+    ├── LICENSE
+    └── README.md
 
-- [dataset](#dataset): Contains dataset files in various formats.
-- [advanced](#advanced): Contains VQNN implementations for the advanced task.
-- [datapreprocessing](#data-preprocessing): Contains data preprocessing code and notes.
-- [model](#model): Contains VQNN model implementations.
-- [model_selection](#model-selection): Hyperparameter tuning files.
-- [prediction](#prediction): Classical predictions.
-- [demo](#demo): demo of COMPRESS BOT.
-- [plots](#plots): Contains various plots and visualizations.
+- [dataset](#dataset): Contains dataset Python classes in order to model our data and provide it to the NNs.
+- [config](#config): Contains a parser configurator
+- [model](#model): Contains different NN model implementations.
+- [model/loss_functions](#model-loss_functions): Contains the Python classes that define the loss functions of NNs.
+- [model/train](#model-train): Contains the trainer for each NN implementation.
+- [model/train/hyperparams](#model-hyperparams): Hyperparameter tuning files.
+- [model/train/base](#model-base): Contains the base classes for our framework.
+- [notebook](#notebook): Contains some Jupiter notebooks used to make dataset analysis.
+- [resources](#resouces): Contains the configuration file and the datasets.
 - [utils](#utils): Contains utility code for plotting results.
-
-### Dataset
-Contains dataset files in various formats.
-
-- `concrete_data.csv`: Raw dataset file.
-- `dataset_with_outliers.csv`: Dataset file with outliers.
-- `dataset_without_outliers.csv`: Dataset file without outliers.
-- `dataset_without_outliers_without_feature.csv`: Dataset file without outliers and a specific feature.
-
-The original dataset is public on Kaggle: https://www.kaggle.com/datasets/elikplim/concrete-compressive-strength-data-set
-
-### Advanced
-Contains advanced VQNN implementations.
-
-- `VQNN_basic_entangler.py`: Implementation of a basic VQNN with an entangler circuit.
-- `basic_entangler_circuit.pdf`: PDF documentation for the basic entangler circuit.
-- `VQNN_random_ansatz.py`: Implementation of a VQNN with a random ansatz circuit.
-- `random_circuit.pdf`: PDF documentation for the random ansatz circuit.
-
-### Data preprocessing
-Contains data preprocessing code and notes.
-
-- `datapreprocessing.ipynb`: Jupyter Notebook for data preprocessing.
-- `notes.md`: Notes related to data preprocessing.
-
-### Model
-Contains VQNN model implementations.
-
-- `VQNN_linear.ipynb`: Jupyter Notebook for linear VQNN.
-- `VQNN_linear.py`: Python script for linear VQNN.
-- `VQNN_nonlinear.ipynb`: Jupyter Notebook for nonlinear VQNN.
-- `VQNN_nonlinear.py`: Python script for nonlinear VQNN.
-
-### Model Selection
-Contains VQNN hyperaparameters tuning and the best model.
-
-### Plots
-Contains various plots and visualizations.
-
-
-### utils
-Contains utility code for plotting results.
-
-- `plot_results.ipynb`: Jupyter Notebook for plotting results.
+- [runs](#runs): Contains the output of the training phase that you can see on Tensorboard
 
 -------------------------------------------------------------
 

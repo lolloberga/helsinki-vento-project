@@ -10,6 +10,7 @@ class StrokeNeuralNetwork(nn.Module):
             nn.Linear(hidden_size, hidden_size_2),
             nn.ReLU(),
             nn.Linear(hidden_size_2, output_size),
+            nn.Sigmoid()
         )
 
     def forward(self, x):

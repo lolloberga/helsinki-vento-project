@@ -15,3 +15,7 @@ class TensorboardUtils:
         ax.legend(loc='upper right')
         fig.tight_layout()
         return fig
+
+    @staticmethod
+    def draw_classification_tensorboard(epochs, loss) -> plt.Figure:
+        return plt.plot(epochs, loss)

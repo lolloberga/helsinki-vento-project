@@ -10,7 +10,6 @@ from tqdm import tqdm
 from model.train.base.hyperparameters import Hyperparameters
 from model.train.base.trainer import Trainer
 from model.train.hyperparams.stroke_ann_hyperparams import Stroke_Hyperparameters
-from utils.tensorboard_utils import TensorboardUtils
 
 
 class StrokeTrainer(Trainer):
@@ -30,17 +29,21 @@ class StrokeTrainer(Trainer):
 
     def get_criterion(self):
         if self._criterion is None:
-            self._criterion = nn.CrossEntropyLoss()
+            self._criterion = nn.BCELoss()
         return self._criterion
 
-    def train_loader(self, train_loader: DataLoader, test_loader: DataLoader) -> Tuple[np.array, np.array]:
+    def train_loader(self, train_loader: DataLoader, test_loader: DataLoader) -> tuple:
 
         train_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
         test_losses = np.zeros(self.hyperparameters['NUM_EPOCHS'])
 
+        # Hold the best model
+        best_acc = -np.inf  # init to negative infinity
+
         for epoch in tqdm(range(self.hyperparameters['NUM_EPOCHS']), desc='Train the model'):
             self.model.train()
             current_loss = 0.0
+            current_acc = 0.0
 
             optimizer = self.get_optimizer()
             criterion = self.get_criterion()
@@ -58,12 +61,15 @@ class StrokeTrainer(Trainer):
                 loss.backward()
                 optimizer.step()
                 current_loss += loss.item()
+                current_acc = (outputs.round() == targets).float().mean()
                 # Write the network graph at epoch 0, batch 0
                 if epoch == 0 and i == 0:
                     self.writer.add_graph(self.model, input_to_model=data[0], verbose=False)
 
+            # print(f'[{epoch + 1}, {i + 1:5d}] loss: {current_loss / 2000:.5f}')
             train_losses[epoch] = current_loss
             self.writer.add_scalar("Stroke ANN - Loss/train", current_loss, epoch)
+            self.writer.add_scalar("Stroke ANN - Accuracy/train", current_acc, epoch)
 
             # Evaluate accuracy at end of each epoch
             self.model.eval()
@@ -78,14 +84,20 @@ class StrokeTrainer(Trainer):
                 val_loss += test_loss.item()
                 val_steps += 1
 
+                acc = (y_pred.round() == targets).float().mean()
+                acc = float(acc)
+                if acc > best_acc:
+                    best_acc = acc
+
             test_losses[epoch] = val_loss
             self.writer.add_scalar("Stroke ANN - Loss/test", val_loss, epoch)
+            self.writer.add_scalar("Stroke ANN - Accuracy/test", acc, epoch)
 
         # Save the model at the end of the training (for future inference)
         self._save_model()
         self.writer.flush()
         self.writer.close()
-        return train_losses, test_losses
+        return train_losses, test_losses, best_acc
 
     def train(self, X_train: torch.Tensor, y_train: torch.Tensor, X_test: torch.Tensor = None,
               y_test: torch.Tensor = None) -> Tuple[np.array, np.array]:

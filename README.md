@@ -28,7 +28,7 @@ We show a demo of what the final output of the project will look like from the p
 
 This is a <b>mock-up</b> of the user interface with the output of this repository:
 <p align="center">
-  <img width="600" height="400" src="https://live.staticflickr.com/65535/53378098327_4b9843398b_z.jpg">
+  <img width="600" height="400" src="https://live.staticflickr.com/65535/53379348274_5d6a3b358e.jpg">
 </p>
 
 <p>

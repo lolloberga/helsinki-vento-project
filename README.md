@@ -9,12 +9,28 @@ Here we train multiple Neural Networks (NNs) to learn how different vital parame
 -------------------------
 
 ## Table of content
+- [Demo](#demo)
 - [Cloning the repo](#cloning-the-repo)
 - [Requirements](#requirements)
 - [Execution](#execution)
-- [Demo](#demo)
 - [Directory Structure](#directory-structure)
+- [Articles](#articles)
 - [Contacts](#contacts)
+
+------------------
+
+## Demo
+We show a demo of what the final output of the project will look like from the perspective of a user using these models to predict his or her risk profile in terms of LTC.
+
+These are the performance of training in terms of accuracy and loss function.
+
+|                      Stroke Detection - Accuracy                      |                        Stroke Detection - Loss                        |
+|:---------------------------------------------------------------------:|:---------------------------------------------------------------------:|
+| ![](https://live.staticflickr.com/65535/53378975161_1fa67c7f49_h.jpg) | ![](https://live.staticflickr.com/65535/53378975171_41b5bb9c53_h.jpg) |
+
+|                      Smoke Detection - Accuracy                       |                        Smoke Detection - Loss                         |
+|:---------------------------------------------------------------------:|:---------------------------------------------------------------------:|
+| ![](https://live.staticflickr.com/65535/53379444215_4d2ea5f5b3_c.jpg) | ![](https://live.staticflickr.com/65535/53378999721_b0878303f3_c.jpg) |
 
 ------------------
 
@@ -67,13 +83,6 @@ Tensorboard will be activated by default on your local computer at this address:
 
 ------------------------
 
-## Demo
-We compute the Mean Square Error (MSE) for both the below approaches.
-
-<a href="https://drive.google.com/file/d/17C42jRWcIWQlhT1DWD6Jan0u-9cAmoim/view?usp=drive_link">
-<img src="https://drive.google.com/file/d/17C42jRWcIWQlhT1DWD6Jan0u-9cAmoim/view?usp=drive_link" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version."/>
-</a>
-
 ## Directory Structure
     .
     ├── config
@@ -105,9 +114,15 @@ We compute the Mean Square Error (MSE) for both the below approaches.
 
 -------------------------------------------------------------
 
+## Articles
+
+
+
+-------------------------------------------------------------
+
 ## Contacts
 
-| Author                | GitHub                                     | 
-|-----------------------|--------------------------------------------|
+| Author                | GitHub                                      | 
+|-----------------------|---------------------------------------------|
 | **Lorenzo Bergadano** | [lolloberga](https://github.com/lolloberga) |
-| **Marco Tuccio**      | [ale100gs](https://github.com/ale100gs)    |
+| **Marco Tuccio**      | [MarcoTuc](https://github.com/MarcoTuc)     |

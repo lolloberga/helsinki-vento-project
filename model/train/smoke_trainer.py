@@ -10,7 +10,8 @@ from tqdm import tqdm
 from model.train.base.hyperparameters import Hyperparameters
 from model.train.base.trainer import Trainer
 from model.train.hyperparams.smoke_ann_hyperparams import Smoke_Hyperparameters
-from utils.tensorboard_utils import TensorboardUtils
+
+THRESHOLD = 0.5
 
 
 class SmokeTrainer(Trainer):
@@ -25,7 +26,8 @@ class SmokeTrainer(Trainer):
 
     def get_optimizer(self) -> torch.optim.Optimizer:
         if self._optim is None:
-            self._optim = torch.optim.SGD(self.model.parameters(), lr=self.hyperparameters['LEARNING_RATE'], momentum=0.9)
+            self._optim = torch.optim.SGD(self.model.parameters(), lr=self.hyperparameters['LEARNING_RATE'],
+                                          momentum=0.9)
         return self._optim
 
     def get_criterion(self):
@@ -62,10 +64,10 @@ class SmokeTrainer(Trainer):
                 current_loss += loss.item()
                 # Training Accuracy
                 for out, tar in zip(outputs, targets):
-                    treshold = 0.5
-                    if out > treshold:
+                    if out > THRESHOLD:
                         out = 1
-                    else: out = 0
+                    else:
+                        out = 0
                     tot_correct += (out == tar).float().item()
                 # Write the network graph at epoch 0, batch 0
                 if epoch == 0 and i == 0:
@@ -76,7 +78,7 @@ class SmokeTrainer(Trainer):
             # print('accuracy:     ',100*tot_correct/len(train_loader.dataset))
 
             train_losses[epoch] = current_loss
-            accuracy = 100*tot_correct/len(train_loader.dataset)
+            accuracy = 100 * tot_correct / len(train_loader.dataset)
 
             self.writer.add_scalar("Stroke ANN - Loss/train", current_loss, epoch)
             self.writer.add_scalar("Stroke ANN - Accuracy", accuracy, epoch)

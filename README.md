@@ -70,6 +70,9 @@ Tensorboard will be activated by default on your local computer at this address:
 ## Demo
 We compute the Mean Square Error (MSE) for both the below approaches.
 
+<a href="https://drive.google.com/file/d/17C42jRWcIWQlhT1DWD6Jan0u-9cAmoim/view?usp=drive_link">
+<img src="https://drive.google.com/file/d/17C42jRWcIWQlhT1DWD6Jan0u-9cAmoim/view?usp=drive_link" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version."/>
+</a>
 
 ## Directory Structure
     .

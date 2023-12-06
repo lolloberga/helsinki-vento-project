@@ -4,11 +4,11 @@ from model.train.base.hyperparameters import Hyperparameters
 ANN_defaults_hyperparams = {
     'TRAIN_SIZE': 0.7,
     'RANDOM_STATE': 42,
-    'HIDDEN_SIZE': 30,
-    'HIDDEN_SIZE_2': 10,
+    'HIDDEN_SIZE': 100,
+    'HIDDEN_SIZE_2': 50,
     'LEARNING_RATE': 0.001,
-    'NUM_EPOCHS': 100,
-    'BATCH_SIZE': 50
+    'NUM_EPOCHS': 200,
+    'BATCH_SIZE': 10
 }
 
 
